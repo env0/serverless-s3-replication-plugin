@@ -384,8 +384,8 @@ test('test replication role with prefix override', async () => {
 
   expect(replicationConfigMap.size).toBe(2)
 
-  expect(replicationConfigMap.get('my-bucket-eu-west-1').role).toEqual(`${prefix}-eu-west-1-s3-rep-role`)
-  expect(replicationConfigMap.get('my-bucket-eu-central-1').role).toEqual(`${prefix}-eu-central-1-s3-rep-role`)
+  expect(replicationConfigMap.get('my-bucket-eu-west-1').role).toEqual(`${prefix}-my-bucket-eu-west-1-s3-rep-role`)
+  expect(replicationConfigMap.get('my-bucket-eu-central-1').role).toEqual(`${prefix}-my-bucket-eu-central-1-s3-rep-role`)
 })
 
 test('test with replication time control', async () => {
