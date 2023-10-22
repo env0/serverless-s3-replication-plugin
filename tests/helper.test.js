@@ -379,13 +379,12 @@ test('test hybrid model of single direction and bidirectional s3 replication', a
 })
 
 test('test replication role with prefix override', async () => {
-  const prefix = 'my-prefix'
-  const replicationConfigMap = await helper.setupS3Replication(createServerlessContext(true, false, prefix))
+  const replicationConfigMap = await helper.setupS3Replication(createServerlessContext(true, false, true))
 
   expect(replicationConfigMap.size).toBe(2)
 
-  expect(replicationConfigMap.get('my-bucket-eu-west-1').role).toEqual(`${prefix}-my-bucket-eu-west-1-s3-rep-role`)
-  expect(replicationConfigMap.get('my-bucket-eu-central-1').role).toEqual(`${prefix}-my-bucket-eu-central-1-s3-rep-role`)
+  expect(replicationConfigMap.get('my-bucket-eu-west-1').role).toEqual(`my-bucket-eu-west-1-s3-rep-role`)
+  expect(replicationConfigMap.get('my-bucket-eu-central-1').role).toEqual(`my-bucket-eu-central-1-s3-rep-role`)
 })
 
 test('test with replication time control', async () => {
@@ -492,7 +491,7 @@ test('test with replication time control', async () => {
 
 })
 
-function createServerlessContext (singleDirection, bidirectional, replicationRolePrefixOverride, withReplicationTimeControl) {
+function createServerlessContext (singleDirection, bidirectional, useShortRoleName, withReplicationTimeControl) {
   return {
     service: {
       provider: {
@@ -503,7 +502,7 @@ function createServerlessContext (singleDirection, bidirectional, replicationRol
         s3ReplicationPlugin: {
           singleDirectionReplication: singleDirection ? createSingleDirectionReplicationConfig() : undefined,
           bidirectionalReplicationBuckets: bidirectional ? createBidirectionalReplicationConfig() : undefined,
-          replicationRolePrefixOverride,
+          useShortRoleName,
           withReplicationTimeControl
         }
       }
