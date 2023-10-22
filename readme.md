@@ -87,7 +87,7 @@ ValidationError: 1 validation error detected: Value 'your-long-service-name-eu-w
 ```
 
 To resolve this issue, you can use the `useShortRoleName` configuration to to reduce the length of the role name to the
-format - `${sourceBucket}-s3-rep-role`.
+format - `${sourceBucket}-s3-rep`.
 
 ```yaml
 custom:

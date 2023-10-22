@@ -4,7 +4,7 @@ const aws = require('aws-sdk')
 const S3_PREFIX = 'arn:aws:s3:::'
 const TAG = 'SLS-S3-REPLICATION-PLUGIN'
 const LOG_PREFIX = 'SLS-S3-REPLICATION-PLUGIN:'
-const REPLICATION_ROLE_SUFFIX = 's3-rep-role'
+const REPLICATION_ROLE_SUFFIX = 's3-rep'
 
 function getCredentials (serverless) {
   const provider = serverless.getProvider('aws')
