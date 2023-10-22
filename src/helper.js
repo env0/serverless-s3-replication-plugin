@@ -107,9 +107,9 @@ async function createOrUpdateS3ReplicationRole (
 ) {
   const iam = new aws.IAM(getCredentials(serverless))
 
-  const defaultRoleName = `${getServiceName(serverless)}-${sourceRegion}-${sourceBucket}-${REPLICATION_ROLE_SUFFIX}`
-  const prefixOverride = serverless.service.custom.s3ReplicationPlugin.replicationRolePrefixOverride
-  const roleName = prefixOverride ? `${prefixOverride}-${sourceBucket}-${REPLICATION_ROLE_SUFFIX}` : defaultRoleName
+  const roleName = serverless.service.custom.s3ReplicationPlugin.useShortRoleName ?
+    `${sourceBucket}-${REPLICATION_ROLE_SUFFIX}` :
+    `${getServiceName(serverless)}-${sourceRegion}-${sourceBucket}-${REPLICATION_ROLE_SUFFIX}`
 
   const createRoleRequest = {
     RoleName: roleName,
