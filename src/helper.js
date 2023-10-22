@@ -109,7 +109,7 @@ async function createOrUpdateS3ReplicationRole (
 
   const defaultRoleName = `${getServiceName(serverless)}-${sourceRegion}-${sourceBucket}-${REPLICATION_ROLE_SUFFIX}`
   const prefixOverride = serverless.service.custom.s3ReplicationPlugin.replicationRolePrefixOverride
-  const roleName = prefixOverride ? `${prefixOverride}-${sourceRegion}-${REPLICATION_ROLE_SUFFIX}` : defaultRoleName
+  const roleName = prefixOverride ? `${prefixOverride}-${sourceBucket}-${REPLICATION_ROLE_SUFFIX}` : defaultRoleName
 
   const createRoleRequest = {
     RoleName: roleName,
