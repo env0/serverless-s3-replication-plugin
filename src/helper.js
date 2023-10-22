@@ -22,14 +22,19 @@ function getServiceName (serverless) {
 }
 
 function getSingleDirectionReplicationConfigs (serverless) {
-  return serverless.service.custom.s3ReplicationPlugin.singleDirectionReplication
+  return serverless.service.custom.s3ReplicationPlugin?.singleDirectionReplication
 }
 
 function getBidirectionalReplicationBucketConfigs (serverless) {
-  return serverless.service.custom.s3ReplicationPlugin.bidirectionalReplicationBuckets
+  return serverless.service.custom.s3ReplicationPlugin?.bidirectionalReplicationBuckets
 }
 
 async function setupS3Replication (serverless) {
+  if (!getSingleDirectionReplicationConfigs(serverless) && !getBidirectionalReplicationBucketConfigs(serverless)) {
+    serverless.cli.log(`${LOG_PREFIX} Aborting, no replication configuration found`)
+    return
+  }
+
   serverless.cli.log(`${LOG_PREFIX} Starting setting up the S3 Replication`)
   const replicationConfigMap = new Map()
 
