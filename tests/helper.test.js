@@ -34,7 +34,7 @@ const SERVICE_NAME = 'TEST-SERVICE'
 
 test('test s3 replication with empty context', async () => {
   const replicationConfigMap = await helper.setupS3Replication(createServerlessContext(false, false))
-  expect(replicationConfigMap).toEqual(undefined)
+  expect(replicationConfigMap).toEqual(new Map())
 })
 
 test('test single direction s3 replication', async () => {
