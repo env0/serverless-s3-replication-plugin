@@ -30,15 +30,20 @@ function getBidirectionalReplicationBucketConfigs (serverless) {
 }
 
 async function setupS3Replication (serverless) {
+  const singleDirectionReplication = getSingleDirectionReplicationConfigs(serverless) ?? [];
+  const bidirectionalReplicationBuckets = getBidirectionalReplicationBucketConfigs(serverless) ?? [];
+
+  if (singleDirectionReplication.length === 0 && bidirectionalReplicationBuckets.length === 0) return;
+
   serverless.cli.log(`${LOG_PREFIX} Starting setting up the S3 Replication`)
   const replicationConfigMap = new Map()
 
   if (await allSpecifiedBucketsExist(serverless)) {
-    if (getBidirectionalReplicationBucketConfigs(serverless)) {
+    if (bidirectionalReplicationBuckets) {
       setupBidirectionalReplicationBuckets(serverless, replicationConfigMap)
     }
 
-    if (getSingleDirectionReplicationConfigs(serverless)) {
+    if (singleDirectionReplication) {
       setupSingleDirectionReplication(serverless, replicationConfigMap)
     }
 
