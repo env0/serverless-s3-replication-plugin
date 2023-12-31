@@ -22,16 +22,16 @@ function getServiceName (serverless) {
 }
 
 function getSingleDirectionReplicationConfigs (serverless) {
-  return serverless.service.custom.s3ReplicationPlugin.singleDirectionReplication
+  return serverless.service.custom.s3ReplicationPlugin?.singleDirectionReplication ?? []
 }
 
 function getBidirectionalReplicationBucketConfigs (serverless) {
-  return serverless.service.custom.s3ReplicationPlugin.bidirectionalReplicationBuckets
+  return serverless.service.custom.s3ReplicationPlugin?.bidirectionalReplicationBuckets ?? []
 }
 
 async function setupS3Replication (serverless) {
-  const singleDirectionReplication = getSingleDirectionReplicationConfigs(serverless) ?? [];
-  const bidirectionalReplicationBuckets = getBidirectionalReplicationBucketConfigs(serverless) ?? [];
+  const singleDirectionReplication = getSingleDirectionReplicationConfigs(serverless);
+  const bidirectionalReplicationBuckets = getBidirectionalReplicationBucketConfigs(serverless);
 
   if (singleDirectionReplication.length === 0 && bidirectionalReplicationBuckets.length === 0) return;
 
