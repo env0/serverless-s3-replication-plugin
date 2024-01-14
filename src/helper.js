@@ -5,6 +5,9 @@ const S3_PREFIX = 'arn:aws:s3:::'
 const TAG = 'SLS-S3-REPLICATION-PLUGIN'
 const LOG_PREFIX = 'SLS-S3-REPLICATION-PLUGIN:'
 const REPLICATION_ROLE_SUFFIX = 's3rep'
+const SLEEP_TIME = 2000
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function getCredentials (serverless) {
   const provider = serverless.getProvider('aws')
@@ -210,6 +213,7 @@ async function putBucketReplicationsForReplicationConfigMap (serverless, replica
     }
 
     await s3.putBucketReplication(s3BucketReplicationRequest).promise()
+    await sleep(SLEEP_TIME);
   }
 }
 
