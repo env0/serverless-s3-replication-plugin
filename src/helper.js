@@ -247,7 +247,7 @@ function createS3RulesForBucket (serverless, sourceBucket, targetBucketConfigs, 
       }
     })
 
-    counter+
+    counter++
 
     serverless.cli.log(`${LOG_PREFIX} Creating replication rule between ${chalk.green(sourceBucket)} and ${chalk.green(targetBucket)} S3 buckets`)
   }
