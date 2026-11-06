@@ -34,7 +34,7 @@ const SERVICE_NAME = 'TEST-SERVICE'
 
 test('test s3 replication with empty context', async () => {
   const replicationConfigMap = await helper.setupS3Replication(createServerlessContext(false, false))
-  expect(replicationConfigMap).toEqual(new Map())
+  expect(replicationConfigMap).toBeUndefined()
 })
 
 test('test single direction s3 replication', async () => {
@@ -44,14 +44,14 @@ test('test single direction s3 replication', async () => {
 
   expect(replicationConfigMap.get('my-bucket-eu-west-1')).toEqual({
     region: 'eu-west-1',
-    role: 'TEST-SERVICE-eu-west-1-my-bucket-eu-west-1-s3-rep',
+    role: 'TEST-SERVICE-eu-west-1-my-bucket-eu-west-1-s3rep',
     rules: [
       {
         DeleteMarkerReplication: {
           Status: 'Enabled'
         },
         Destination: {
-          Bucket: 'arn:aws:s3:::my-bucket-eu-west-2',
+          Bucket: 'arn:aws:s3:::my-bucket-eu-west-2'
         },
         Filter: {
           Prefix: ''
@@ -81,7 +81,7 @@ test('test single direction s3 replication', async () => {
 
   expect(replicationConfigMap.get('my-bucket-eu-central-1')).toEqual({
     region: 'eu-central-1',
-    role: 'TEST-SERVICE-eu-central-1-my-bucket-eu-central-1-s3-rep',
+    role: 'TEST-SERVICE-eu-central-1-my-bucket-eu-central-1-s3rep',
     rules: [
       {
         DeleteMarkerReplication: {
@@ -104,13 +104,13 @@ test('test single direction s3 replication', async () => {
 })
 
 test('test bidirectional s3 replication', async () => {
-  const replicationConfigMap = await helper.setupS3Replication(createServerlessContext(false, true,))
+  const replicationConfigMap = await helper.setupS3Replication(createServerlessContext(false, true))
 
   expect(replicationConfigMap.size).toBe(3)
 
   expect(replicationConfigMap.get('my-bucket-eu-west-1')).toEqual({
     region: 'eu-west-1',
-    role: 'TEST-SERVICE-eu-west-1-my-bucket-eu-west-1-s3-rep',
+    role: 'TEST-SERVICE-eu-west-1-my-bucket-eu-west-1-s3rep',
     rules: [
       {
         DeleteMarkerReplication: {
@@ -147,7 +147,7 @@ test('test bidirectional s3 replication', async () => {
 
   expect(replicationConfigMap.get('my-bucket-eu-central-1')).toEqual({
     region: 'eu-central-1',
-    role: 'TEST-SERVICE-eu-central-1-my-bucket-eu-central-1-s3-rep',
+    role: 'TEST-SERVICE-eu-central-1-my-bucket-eu-central-1-s3rep',
     rules: [
       {
         DeleteMarkerReplication: {
@@ -184,7 +184,7 @@ test('test bidirectional s3 replication', async () => {
 
   expect(replicationConfigMap.get('my-bucket-us-east-1')).toEqual({
     region: 'us-east-1',
-    role: 'TEST-SERVICE-us-east-1-my-bucket-us-east-1-s3-rep',
+    role: 'TEST-SERVICE-us-east-1-my-bucket-us-east-1-s3rep',
     rules: [
       {
         DeleteMarkerReplication: {
@@ -226,7 +226,7 @@ test('test hybrid model of single direction and bidirectional s3 replication', a
   expect(replicationConfigMap.size).toBe(3)
   expect(replicationConfigMap.get('my-bucket-eu-west-1')).toEqual({
     region: 'eu-west-1',
-    role: 'TEST-SERVICE-eu-west-1-my-bucket-eu-west-1-s3-rep',
+    role: 'TEST-SERVICE-eu-west-1-my-bucket-eu-west-1-s3rep',
     rules: [
       {
         DeleteMarkerReplication: {
@@ -291,7 +291,7 @@ test('test hybrid model of single direction and bidirectional s3 replication', a
 
   expect(replicationConfigMap.get('my-bucket-eu-central-1')).toEqual({
     region: 'eu-central-1',
-    role: 'TEST-SERVICE-eu-central-1-my-bucket-eu-central-1-s3-rep',
+    role: 'TEST-SERVICE-eu-central-1-my-bucket-eu-central-1-s3rep',
     rules: [
       {
         DeleteMarkerReplication: {
@@ -342,7 +342,7 @@ test('test hybrid model of single direction and bidirectional s3 replication', a
 
   expect(replicationConfigMap.get('my-bucket-us-east-1')).toEqual({
     region: 'us-east-1',
-    role: 'TEST-SERVICE-us-east-1-my-bucket-us-east-1-s3-rep',
+    role: 'TEST-SERVICE-us-east-1-my-bucket-us-east-1-s3rep',
     rules: [
       {
         DeleteMarkerReplication: {
@@ -383,8 +383,8 @@ test('test replication role with prefix override', async () => {
 
   expect(replicationConfigMap.size).toBe(2)
 
-  expect(replicationConfigMap.get('my-bucket-eu-west-1').role).toEqual(`my-bucket-eu-west-1-s3-rep`)
-  expect(replicationConfigMap.get('my-bucket-eu-central-1').role).toEqual(`my-bucket-eu-central-1-s3-rep`)
+  expect(replicationConfigMap.get('my-bucket-eu-west-1').role).toEqual('my-bucket-eu-west-1-s3rep')
+  expect(replicationConfigMap.get('my-bucket-eu-central-1').role).toEqual('my-bucket-eu-central-1-s3rep')
 })
 
 test('test with replication time control', async () => {
@@ -394,7 +394,7 @@ test('test with replication time control', async () => {
 
   expect(replicationConfigMap.get('my-bucket-eu-west-1')).toEqual({
     region: 'eu-west-1',
-    role: 'TEST-SERVICE-eu-west-1-my-bucket-eu-west-1-s3-rep',
+    role: 'TEST-SERVICE-eu-west-1-my-bucket-eu-west-1-s3rep',
     rules: [
       {
         DeleteMarkerReplication: {
@@ -456,7 +456,7 @@ test('test with replication time control', async () => {
 
   expect(replicationConfigMap.get('my-bucket-eu-central-1')).toEqual({
     region: 'eu-central-1',
-    role: 'TEST-SERVICE-eu-central-1-my-bucket-eu-central-1-s3-rep',
+    role: 'TEST-SERVICE-eu-central-1-my-bucket-eu-central-1-s3rep',
     rules: [
       {
         DeleteMarkerReplication: {
@@ -488,7 +488,6 @@ test('test with replication time control', async () => {
       { 'us-east-2': 'my-bucket-us-east-2' }
     ]
   })
-
 })
 
 function createServerlessContext (singleDirection, bidirectional, useShortRoleName, withReplicationTimeControl) {
