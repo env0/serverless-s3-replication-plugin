@@ -7,7 +7,7 @@ const LOG_PREFIX = 'SLS-S3-REPLICATION-PLUGIN:'
 const REPLICATION_ROLE_SUFFIX = 's3rep'
 const SLEEP_TIME = 2000
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 function getCredentials (serverless) {
   const provider = serverless.getProvider('aws')
@@ -25,18 +25,18 @@ function getServiceName (serverless) {
 }
 
 function getSingleDirectionReplicationConfigs (serverless) {
-  return (serverless.service.custom.s3ReplicationPlugin && serverless.service.custom.s3ReplicationPlugin.singleDirectionReplication) || [];
+  return (serverless.service.custom.s3ReplicationPlugin && serverless.service.custom.s3ReplicationPlugin.singleDirectionReplication) || []
 }
 
 function getBidirectionalReplicationBucketConfigs (serverless) {
-  return (serverless.service.custom.s3ReplicationPlugin && serverless.service.custom.s3ReplicationPlugin.bidirectionalReplicationBuckets) || [];
+  return (serverless.service.custom.s3ReplicationPlugin && serverless.service.custom.s3ReplicationPlugin.bidirectionalReplicationBuckets) || []
 }
 
 async function setupS3Replication (serverless) {
-  const singleDirectionReplication = getSingleDirectionReplicationConfigs(serverless);
-  const bidirectionalReplicationBuckets = getBidirectionalReplicationBucketConfigs(serverless);
+  const singleDirectionReplication = getSingleDirectionReplicationConfigs(serverless)
+  const bidirectionalReplicationBuckets = getBidirectionalReplicationBucketConfigs(serverless)
 
-  if (singleDirectionReplication.length === 0 && bidirectionalReplicationBuckets.length === 0) return;
+  if (singleDirectionReplication.length === 0 && bidirectionalReplicationBuckets.length === 0) return
 
   serverless.cli.log(`${LOG_PREFIX} Starting setting up the S3 Replication`)
   const replicationConfigMap = new Map()
@@ -115,9 +115,9 @@ async function createOrUpdateS3ReplicationRole (
 ) {
   const iam = new aws.IAM(getCredentials(serverless))
 
-  const roleName = serverless.service.custom.s3ReplicationPlugin.useShortRoleName ?
-    `${sourceBucket}-${REPLICATION_ROLE_SUFFIX}` :
-    `${getServiceName(serverless)}-${sourceRegion}-${sourceBucket}-${REPLICATION_ROLE_SUFFIX}`
+  const roleName = serverless.service.custom.s3ReplicationPlugin.useShortRoleName
+    ? `${sourceBucket}-${REPLICATION_ROLE_SUFFIX}`
+    : `${getServiceName(serverless)}-${sourceRegion}-${sourceBucket}-${REPLICATION_ROLE_SUFFIX}`
 
   const createRoleRequest = {
     RoleName: roleName,
@@ -213,7 +213,7 @@ async function putBucketReplicationsForReplicationConfigMap (serverless, replica
     }
 
     await s3.putBucketReplication(s3BucketReplicationRequest).promise()
-    await sleep(SLEEP_TIME);
+    await sleep(SLEEP_TIME)
   }
 }
 
@@ -255,20 +255,22 @@ function createS3RulesForBucket (serverless, sourceBucket, targetBucketConfigs, 
 }
 
 function getReplicationTimeControl (serverless) {
-  return serverless.service.custom.s3ReplicationPlugin.withReplicationTimeControl ? {
-    Metrics: {
-      EventThreshold: {
-        Minutes: 15
-      },
-      Status: 'Enabled'
-    },
-    ReplicationTime: {
-      Status: 'Enabled',
-      Time: {
-        Minutes: 15
+  return serverless.service.custom.s3ReplicationPlugin.withReplicationTimeControl
+    ? {
+        Metrics: {
+          EventThreshold: {
+            Minutes: 15
+          },
+          Status: 'Enabled'
+        },
+        ReplicationTime: {
+          Status: 'Enabled',
+          Time: {
+            Minutes: 15
+          }
+        }
       }
-    }
-  } : {}
+    : {}
 }
 
 async function allSpecifiedBucketsExist (serverless) {
